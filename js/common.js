@@ -21,9 +21,7 @@ $('body').addClass(p_lang);
     db = data;
     $(document).trigger('dbLoaded');
   });
-  $(document).on('dbLoaded', function() {
-    uploaddata();
-  });
+  
 
 
   function funcIsotop(){
@@ -333,10 +331,13 @@ $(function() {
 
 $('.search').on( 'click', '.btn-search', function(){
   var text = $('.inp-search').val();
+  var re = /([А-ЯЁа-яёA-Za-z]+)\s([А-ЯЁа-яёA-Za-z]+)/;
+  var text2 = text.replace(re, '$2 $1');
   $('.grid').isotope({ filter: function() {
     var name = $(this).find('.item-name').text();
-    return name.match( text );
-  } })
+    return name.match(RegExp('^'+text+'$|^('+text+')\\s|\\s('+text+')$|^'+text2+'$', 'ig'));
+  } });
+
 });
 
 
@@ -357,6 +358,9 @@ $('.search').on( 'click', '.btn-abort', function(){
   $(window).on("load", function() {
 
     if ( (p_lang == '') && (p_view == '') && (p_sort == '') && (p_asc == '') ){
+      $(document).on('dbLoaded', function() {
+        uploaddata();
+      });
       return false;
     }
     else {
@@ -406,7 +410,7 @@ $('.search').on( 'click', '.btn-abort', function(){
         new WOW().init();
 
 
-      }, 10);
+      }, 1000);
 
     }
 
